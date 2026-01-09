@@ -200,10 +200,11 @@ def process_analytics(data: Dict[str, Any], epsilon: float = DEFAULT_EPSILON) ->
     raw_metrics = calculate_aggregate_risk_scores(customers)
     
     # Apply Differential Privacy (splits epsilon across all queries)
-    # Use Gaussian mechanism for many queries (better composition bounds)
+    # Use Laplace mechanism for data analytics/release (better for one-off statistics)
+    # For ML/training scenarios, use Gaussian instead (see dp_logic.py comments)
     # Minimum epsilon protection prevents excessive noise
     # Include metadata for composition tracking
-    dp_metrics = apply_dp_to_risk_metrics(raw_metrics, epsilon=epsilon, split_budget=True, use_gaussian=True, include_metadata=True)
+    dp_metrics = apply_dp_to_risk_metrics(raw_metrics, epsilon=epsilon, split_budget=True, use_gaussian=False, include_metadata=True)
     
     # Calculate privacy budget info (now correctly accounting for all queries)
     num_queries = dp_metrics.get("_num_queries", 1)

@@ -15,10 +15,34 @@ def add_laplace_noise(value: float, epsilon: float, sensitivity: float) -> float
     """
     Add Laplace noise to a value for Differential Privacy.
     
-    Uses L1 sensitivity. Best for:
-    - Single or few queries
-    - Lower confidence levels (<95%)
-    - When you need pure epsilon-DP (no delta)
+    Laplace Mechanism - Best for Data Analytics/Release:
+    ====================================================
+    ✅ Use when:
+    - You want pure ε-DP (strongest guarantee, no delta parameter)
+    - Releasing one-off statistics (counts, sums, percentages, means)
+    - Data dashboards and analytics reports
+    - Simple numeric queries
+    - You want tighter guarantees with smaller noise for small datasets
+    
+    ❌ Don't use when:
+    - Machine learning / iterative training (use Gaussian)
+    - Many repeated queries with composition (Gaussian has better bounds)
+    - High-dimensional data / gradients (use Gaussian)
+    
+    How it works:
+    - Adds noise drawn from a Laplace distribution
+    - Noise scale = sensitivity / epsilon
+    - Provides pure ε-DP (no delta parameter)
+    
+    Pros:
+    - Strong, clean theoretical guarantee (ε-DP)
+    - Simple to implement
+    - Often less noise than Gaussian for the same ε
+    - Industry standard for data release (Google/Apple style)
+    
+    Cons:
+    - Harder to compose across many queries
+    - Less flexible for ML / iterative algorithms
     
     Args:
         value: The original value to protect
@@ -46,12 +70,42 @@ def add_gaussian_noise(value: float, epsilon: float, delta: float, sensitivity: 
     """
     Add Gaussian noise to a value for Differential Privacy.
     
-    Uses L2 sensitivity. Best for:
-    - Many queries (10+)
-    - Higher confidence levels (≥95%)
-    - When using advanced composition (better bounds)
+    Gaussian Mechanism - Best for Machine Learning/Training:
+    ========================================================
+    ✅ Use when:
+    - Machine learning / iterative training (DP-SGD, federated learning)
+    - You need composition over many steps/iterations
+    - High-dimensional data (embeddings, gradients)
+    - Repeated queries with better composition bounds
+    - You're okay with (ε, δ)-DP instead of pure ε-DP
     
-    Provides (epsilon, delta)-DP instead of pure epsilon-DP.
+    ❌ Don't use when:
+    - One-off data release / dashboards (use Laplace)
+    - You need pure ε-DP (Laplace provides stronger guarantee)
+    - Simple statistics (counts, sums) - Laplace is simpler
+    
+    How it works:
+    - Adds noise from a Gaussian (normal) distribution
+    - Noise scale = sensitivity × √(log(1/δ)) / ε
+    - Provides (ε, δ)-DP (weaker than pure ε-DP, but better composition)
+    
+    Pros:
+    - Much better composition properties (advanced composition)
+    - Standard in DP-SGD, federated learning
+    - Plays nicely with high-dimensional data
+    - Better for many repeated queries
+    
+    Cons:
+    - Weaker guarantee (δ > 0, small failure probability)
+    - Usually more noise than Laplace for one-off queries
+    - More complex (requires delta parameter)
+    
+    Example for ML:
+    ---------------
+    # For DP-SGD training:
+    # gradients = compute_gradients(batch)
+    # noisy_gradients = gradients + add_gaussian_noise(0, epsilon=1.0, delta=1e-5, sensitivity=gradient_norm)
+    # model.update(noisy_gradients)
     
     Args:
         value: The original value to protect
@@ -75,6 +129,49 @@ def add_gaussian_noise(value: float, epsilon: float, delta: float, sensitivity: 
     noise = np.random.normal(0, sigma)
     
     return value + noise
+
+
+# ============================================================================
+# EXAMPLE: Using Gaussian for Machine Learning (DP-SGD)
+# ============================================================================
+# 
+# For ML training scenarios, use Gaussian instead of Laplace:
+#
+# def dp_sgd_step(model, batch, epsilon, delta):
+#     \"\"\"
+#     One step of Differentially Private Stochastic Gradient Descent.
+#     Uses Gaussian noise for better composition over many iterations.
+#     \"\"\"
+#     # Compute gradients
+#     gradients = compute_gradients(model, batch)
+#     
+#     # Calculate sensitivity (L2 norm clipping)
+#     gradient_norm = np.linalg.norm(gradients)
+#     clip_threshold = 1.0  # Clip gradients to this norm
+#     if gradient_norm > clip_threshold:
+#         gradients = gradients * (clip_threshold / gradient_norm)
+#     sensitivity = clip_threshold / len(batch)  # Per-sample sensitivity
+#     
+#     # Add Gaussian noise to gradients
+#     noisy_gradients = gradients.copy()
+#     for i in range(len(gradients)):
+#         noisy_gradients[i] = add_gaussian_noise(
+#             gradients[i],
+#             epsilon=epsilon,
+#             delta=delta,
+#             sensitivity=sensitivity
+#         )
+#     
+#     # Update model
+#     model.update(noisy_gradients)
+#     return model
+#
+# # Usage in training loop:
+# # for epoch in range(num_epochs):
+# #     for batch in dataloader:
+# #         model = dp_sgd_step(model, batch, epsilon=1.0, delta=1e-5)
+#
+# ============================================================================
 
 
 def add_discrete_gaussian_noise(value: float, epsilon: float, delta: float, sensitivity: float) -> int:
@@ -200,10 +297,11 @@ def apply_dp_to_risk_metrics(metrics: Dict[str, float], epsilon: float = 1.0,
         # Note: This uses advanced composition, so total privacy is still bounded
     
     # Automatically choose mechanism if not specified
-    # For many queries (10+), Gaussian has better composition bounds
-    # With minimum epsilon protection, Gaussian works well even with split epsilon
+    # For data analytics/release: Use Laplace (better for one-off statistics)
+    # For ML/training: Use Gaussian (better composition for iterative algorithms)
+    # This is a data analytics use case, so default to Laplace
     if use_gaussian is None:
-        use_gaussian = num_queries >= 10  # Use Gaussian for 10+ queries
+        use_gaussian = False  # Default to Laplace for data analytics
     
     # Choose noise function based on mechanism
     # CRITICAL: All queries in this release use the SAME mechanism for proper composition
