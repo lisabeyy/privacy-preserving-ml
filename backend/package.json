@@ -1,0 +1,24 @@
+{
+  "name": "confidential-analytics-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Confidential Collaborative Analytics Platform",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "axios": "^1.6.0",
+    "multer": "^1.4.5-lts.1",
+    "crypto": "^1.0.1",
+    "ethers": "^6.9.0",
+    "fernet": "^0.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
+

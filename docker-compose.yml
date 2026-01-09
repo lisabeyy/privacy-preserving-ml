@@ -1,0 +1,71 @@
+# Complete Docker Compose setup for the entire platform
+# Similar to private-ml-sdk/vllm-proxy pattern
+
+x-common: &common-config
+  restart: always
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "100m"
+      max-file: "5"
+
+services:
+  # TEE Analytics Service
+  tee-service:
+    <<: *common-config
+    build:
+      context: ./tee_service
+      dockerfile: Dockerfile
+    container_name: analytics-tee-service
+    privileged: true
+    volumes:
+      - /var/run/dstack.sock:/var/run/dstack.sock
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - DP_EPSILON=${DP_EPSILON:-1.0}
+      - TEE_TIMESTAMP=${TEE_TIMESTAMP:-unknown}
+    networks:
+      - analytics-network
+
+  # Backend API
+  backend:
+    <<: *common-config
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: analytics-backend
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - TEE_SERVICE_URL=http://tee-service:8080
+    depends_on:
+      - tee-service
+    networks:
+      - analytics-network
+
+  # Frontend (Next.js)
+  frontend:
+    <<: *common-config
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: analytics-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:3001
+      - NODE_ENV=development
+    depends_on:
+      - backend
+    networks:
+      - analytics-network
+    # For Next.js dev server to work in Docker
+    command: npm run dev -- -H 0.0.0.0
+
+networks:
+  analytics-network:
+    driver: bridge
+

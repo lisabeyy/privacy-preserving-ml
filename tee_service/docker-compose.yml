@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  analytics-service:
+    # Use pre-built image from Docker Hub
+    # First build and push: docker build -t your-username/analytics-tee:latest . && docker push your-username/analytics-tee:latest
+    image: lisabey/analytics-tee-service:latest
+    pull_policy: always  # Force pull on every start
+    container_name: analytics-tee-service
+    privileged: true
+    volumes:
+      - /var/run/dstack.sock:/var/run/dstack.sock
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - DP_EPSILON=1.0
+      - TEE_TIMESTAMP=unknown
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "5"
+

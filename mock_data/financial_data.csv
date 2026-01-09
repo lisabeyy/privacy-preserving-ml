@@ -1,0 +1,51 @@
+customer_id,age,income,employment_status,credit_score,loan_amount,loan_purpose,monthly_expenses,transaction_volume,account_balance,delinquency_flag
+CUST001,45,75000,Employed,680,12000,Car Loan,2400,,15000,False
+CUST002,32,45000,Employed,620,5000,Personal Loan,1800,,8000,True
+CUST003,59,125000,Retired,720,18000,Home Renovation,3200,,34000,False
+CUST004,27,40000,Self-employed,580,7000,Business Expense,2100,,6000,True
+CUST005,38,98000,Employed,700,25000,Mortgage,2800,,41000,False
+CUST006,50,66000,Employed,640,10000,Education,2300,,12000,False
+CUST007,29,52000,Employed,610,4000,Medical,2000,,5000,True
+CUST008,42,83000,Self-employed,690,15000,Home Appliance,2600,,25000,False
+CUST009,55,105000,Employed,730,30000,Mortgage,3500,,50000,False
+CUST010,31,58000,Employed,600,6000,Vacation,2100,,7000,True
+CUST011,48,92000,Employed,710,22000,Home Improvement,2900,,38000,False
+CUST012,26,38000,Part-time,590,8000,Credit Card Consolidation,1900,,3000,True
+CUST013,61,95000,Retired,750,15000,Investment Property,2800,,120000,False
+CUST014,35,72000,Employed,665,14000,Wedding,2500,,18000,False
+CUST015,41,88000,Self-employed,675,20000,Business Expansion,2700,,22000,False
+CUST016,28,47000,Employed,605,9000,Debt Consolidation,1950,,4000,True
+CUST017,53,112000,Employed,740,35000,Mortgage Refinance,3800,,75000,False
+CUST018,33,56000,Contractor,615,11000,Emergency Fund,2200,,9000,False
+CUST019,46,79000,Employed,685,16000,Home Repair,2550,,20000,False
+CUST020,24,35000,Part-time,570,12000,Student Loan,1700,,2000,True
+CUST021,57,108000,Employed,735,28000,Investment,3300,,95000,False
+CUST022,39,68000,Self-employed,650,13000,Equipment Purchase,2400,,14000,False
+CUST023,30,51000,Employed,595,7500,Medical Bills,2050,,5500,True
+CUST024,49,87000,Employed,705,19000,Home Addition,2750,,32000,False
+CUST025,36,64000,Employed,630,10500,Auto Repair,2350,,11000,False
+CUST026,22,32000,Part-time,560,15000,Education,1600,,1500,True
+CUST027,54,99000,Employed,725,24000,Vacation Property,3100,,68000,False
+CUST028,37,71000,Contractor,645,12500,Tax Payment,2450,,16000,False
+CUST029,43,81000,Employed,695,17000,Home Furnishing,2650,,27000,False
+CUST030,25,42000,Employed,585,8500,Moving Expenses,1850,,4500,True
+CUST031,60,115000,Retired,760,20000,Estate Planning,3600,,150000,False
+CUST032,34,59000,Self-employed,625,9500,Marketing Campaign,2250,,10000,False
+CUST033,47,89000,Employed,715,21000,Solar Panels,2850,,45000,False
+CUST034,29,48000,Part-time,595,11000,Childcare,2000,,5000,True
+CUST035,51,101000,Employed,730,32000,Boat Purchase,3400,,82000,False
+CUST036,38,67000,Contractor,640,11500,Legal Fees,2380,,13000,False
+CUST037,44,85000,Employed,700,18000,Kitchen Remodel,2720,,29000,False
+CUST038,26,44000,Employed,580,10000,Furniture,1920,,3500,True
+CUST039,56,106000,Employed,745,26000,RV Purchase,3250,,110000,False
+CUST040,40,76000,Self-employed,680,14500,Inventory,2520,,19000,False
+CUST041,31,54000,Employed,610,8000,Dental Work,2150,,7500,False
+CUST042,48,94000,Employed,720,23000,Pool Installation,3000,,56000,False
+CUST043,27,46000,Part-time,590,13000,Wedding,1980,,4000,True
+CUST044,52,97000,Employed,728,27000,Second Home,3150,,88000,False
+CUST045,35,63000,Contractor,635,10200,Tools,2320,,12000,False
+CUST046,45,78000,Employed,690,15500,Roof Replacement,2580,,23000,False
+CUST047,23,36000,Part-time,565,14000,Education,1650,,1800,True
+CUST048,58,110000,Retired,755,22000,Travel,3450,,130000,False
+CUST049,39,69000,Self-employed,655,12000,Software License,2420,,15000,False
+CUST050,46,86000,Employed,708,19500,Bathroom Remodel,2790,,38000,False
